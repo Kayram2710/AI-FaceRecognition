@@ -2,12 +2,12 @@ import os
 from PIL import Image
 
 #Defined paths
-rawPath = "Raw Dataset" #Source for Raw Data, creating String for path
+rawPath = "Raw Data" #Source for Raw Data, creating String for path
 destinationPath = "Cleaned Dataset" #Destination for cleaned Data, creating String for path
 size=(256, 256) #Chosen size that pictures will be formatted too
 
 #Creating a value for total amount of pictures desired to be taken from each folder
-total = 500
+total = 600
 
 #Iterating over all sub directories in main directory (Raw Data Folder)
 for category in os.listdir(rawPath):
