@@ -20,7 +20,7 @@
 > It can be run by simply calling it from the command line, with the prerequisite of having the dependency pillow installed
 
 ### Cleaned Dataset Folder
-> This is the populated by DataCleaner.py
+> This is the folder populated/produced by DataCleaner.py
 
 ### DataVisualer.py
 > This python script will iterate through the "Cleaned Dataset" Folder and perform multiple operations using the matplot library
@@ -28,6 +28,9 @@
 > The results of these operations will be displayed on screen in a pop tab, once one tab is closed the next will appear
 
 > It can be run by simply calling it from the command line, with the prerequisite of having the dependency matplotlib, numpy, and pillow installed
+
+### Visualisation Results Folder
+> This folder contains the results saved while executing DataVisualer.py
 
 ### WebPageDownloader.py
 > This is python script that what used to collect raw data for the focused/engaged category
@@ -37,3 +40,10 @@
 > The values were  manually inputed as the process still needed user supervision
 
 > It can be run by simply calling it from the command line, with the prerequisite of having the dependency selenium and webdriver_manager installed
+
+## Dataset Sources:
+### Source of Raw Data for Happy, Angry, Neutral
+https://www.kaggle.com/datasets/jonathanoheix/face-expression-recognition-dataset/data
+
+### Source of Raw Data for Focused
+https://www.freepik.com/search?ai=excluded&format=search&last_filter=type&last_value=photo&people=include&people_range=1&query=focused+people&selection=1&type=photo
