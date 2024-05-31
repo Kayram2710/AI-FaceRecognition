@@ -15,7 +15,7 @@
 
 > It will select 600 images from the sub-folders as a hard limit
 
-> The folder used by the script is called "Raw Dataset" It is a folder installed locally that contains the raw image
+> The folder used by the script is called "Raw Data" It is a folder established locally that contains the raw images we obtained
 
 > It can be run by simply calling it from the command line, with the prerequisite of having the dependency pillow installed
 
@@ -30,7 +30,7 @@
 > It can be run by simply calling it from the command line, with the prerequisite of having the dependency matplotlib, numpy, and pillow installed
 
 ### WebPageDownloader.py
-> This is python script that what used to collect raw data for the focused/engaged category
+> This python script that what used to collect raw data for the focused/engaged category
 
 > It is used by changing the link and assigning a starting image ID so that the script can automate data collection from a site that does not allow large batch downloads automatically.
 
