@@ -126,10 +126,16 @@ def getDataset(path = "Cleaned Dataset"):
 #Define function to train the model
 def train(epochs = 10):
 
+    #Writing parameters for early stoping procedure
+    fluctuationTreshold = 2 #Patience level of 2
+    countFluctuation = 0 #Count start at 0
+    PreviousLoss = 0 #Create variable to store previous loss
+
     #Instantiate Model
     model = FaceRecognitionModel()
 
-    
+    #Create a call for the "Cross Entrop Loss" function
+    #This function will calculate the differance across 
     criterion = network.CrossEntropyLoss()
 
     #Setting an Adam optimizer
@@ -166,6 +172,22 @@ def train(epochs = 10):
         
         #Print epoche results
         print(f'Epoch [{epoch+1}/{epochs}], Loss: {loss.item():.4f}')
+
+        #Early stop procedure
+        #If epoch is at 0, do nothing
+        if(epoch == 0):
+            PreviousLoss = loss.item()
+        #Else check if new loss is greater then previous
+        elif(loss.item >= PreviousLoss):
+            countFluctuation = 1 + countFluctuation #If it is count the fluctuation
+        else:
+            countFluctuation = 0 #If it isnt reset it
+        
+        #Then check if count equal or surpasses treshold
+        if(countFluctuation >= fluctuationTreshold):
+            print(f'Exited program as model was faulty')
+            return #return and end
+
 
     #return the model
     torch.save(model, 'SavedModels/MainModel.pth')
