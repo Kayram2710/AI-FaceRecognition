@@ -1,4 +1,6 @@
 #This script will train our main model and save it in its entierty
+#This varient adds a third convolutional layer and increases the kernel size whitin the convultional layers
+#This is to test to see if heavier computations yield better results
 import torch
 import torch.nn as network
 import torch.optim as optim
@@ -26,7 +28,8 @@ class FaceRecognitionModel(network.Module):
             network.Conv2d(
                 in_channels= 1,     #param1: =1 indicates input("x") has one input channel since the data is in grayscale
                 out_channels= 32,   #param2: =32 is the number of filters(kernels) the input("x") will go through
-                kernel_size = 3,    #param3: =3 to indicate that 3x3 is the size of each filter(kernels)
+                kernel_size = 5,    #param3: =5 to indicate that 5x5 is the size of each filter(kernels)
+                #-------------------------------------------------------------------VARIENT: INCREASED SIZE
                 padding = 1         #param4: =1 to add a padding of width 1 to the border of the image 
             ),
 
@@ -45,7 +48,8 @@ class FaceRecognitionModel(network.Module):
             network.Conv2d(
                 in_channels= 32,    #param1: =32 indicates the amount of input channels, changed by the previous convolutional layer
                 out_channels= 64,   #param2: =64 is the number of filters(kernels) the input("x") will go through
-                kernel_size = 3,    #param3: =3 to indicate that 3x3 is the size of each filter(kernels)
+                kernel_size = 5,    #param3: =5 to indicate that 5x5 is the size of each filter(kernels)
+                #-------------------------------------------------------------------VARIENT: INCREASED SIZE
                 padding = 1         #param4: =1 to add a padding of width 1 to the border of the image 
             ),
 
@@ -53,6 +57,25 @@ class FaceRecognitionModel(network.Module):
             network.ReLU(),
 
             #Call to the second pooling layer
+            network.MaxPool2d(
+                kernel_size=2,  #param1: =2 to indicate that 2x2 is the size of the reduced filters(kernels)
+                stride=2        #param2: =2 to indicate the process to move 2 windows at a time while grouping
+            ),
+
+            #-------------------------------------------------------------------VARIENT: ADDED THIRD CONVULTIONAL LAYER
+            #Call to the third convolutional layer
+            network.Conv2d(
+                in_channels= 64,    #param1: =64 indicates the amount of input channels, changed by the previous convolutional layer
+                out_channels= 128,  #param2: =128 is the number of filters(kernels) the input("x") will go through
+                kernel_size = 5,    #param3: =5 to indicate that 5x5 is the size of each filter(kernels)
+                #-------------------------------------------------------------------VARIENT: INCREASED SIZE
+                padding = 1         #param4: =1 to add a padding of width 1 to the border of the image 
+            ),
+
+            #Third call to the activation function
+            network.ReLU(),
+
+            #Call to the third pooling layer
             network.MaxPool2d(
                 kernel_size=2,  #param1: =2 to indicate that 2x2 is the size of the reduced filters(kernels)
                 stride=2        #param2: =2 to indicate the process to move 2 windows at a time while grouping
@@ -65,14 +88,15 @@ class FaceRecognitionModel(network.Module):
 
             #First call to the linearization function
             #This will flaten(connect) the learned information accross all the neurons
+            #-------------------------------------------------------------------VARIENT: ADJUSTED ACCORDINGLY
             network.Linear(
-                in_features = 64 * 64 * 64,   #param1: this is the size of the 1d tensor, 
-                                                #its calculated by assuming 64 chanel outputs * the reduced size of the tensor from the pooling
-                                                #since the images started out as 256x256 and have been halved twice after being substracted by 3, the size of the tensor is 64x64
+                in_features = 128 * 30 * 30,   #param1: this is the size of the 1d tensor, 
+                                                #its calculated by assuming 128 chanel outputs * the reduced size of the tensor from the pooling
+                                                #since the images started out as 256x256 and have been halved three times after being susbtracted by 5, size of the tensor is 30x30
                 out_features = 256             #param2: number of neurons in the layer 
             ),
 
-            #Third call tp the activation function
+            #Fourth call tp the activation function
             network.ReLU(),
 
             #Second call to the linearization function
@@ -198,33 +222,72 @@ def train(epochs = 15):
         #Then check if count equal or surpasses treshold
         if(countFluctuation >= fluctuationTreshold):
             print(f'Exited program due to too many fluctuation')
-            torch.save(model, 'SavedModels/MainModel.pth')
+            torch.save(model, 'SavedModels/Varient1.pth')
             return #return and end
         
 
     #return the model
-    torch.save(model, 'SavedModels/MainModel.pth')
+    torch.save(model, 'SavedModels/Varient1.pth')
 
 #Call the train function
 train()
 
-#This is the output
+#This is the output from testing change by change
 """
---------Log Output-----------
-Epoch [1/15], Loss: 1.1949
-Epoch [2/15], Loss: 1.0948
-Epoch [3/15], Loss: 0.7804
-Epoch [4/15], Loss: 0.8738
-Epoch [5/15], Loss: 0.6971
-Epoch [6/15], Loss: 0.5150
-Epoch [7/15], Loss: 0.5040
-Epoch [8/15], Loss: 0.3405
-Epoch [9/15], Loss: 0.0830
-Epoch [10/15], Loss: 0.0568
-Epoch [11/15], Loss: 0.0274
-Epoch [12/15], Loss: 0.1670
+--------Log Output----------- 
+Varient: Additional Convolutional Layer Only
+Epoch [1/15], Loss: 1.0907
+Epoch [2/15], Loss: 1.0015
+Epoch [3/15], Loss: 0.9681
+Epoch [4/15], Loss: 0.7922
+Epoch [5/15], Loss: 0.6108
+Epoch [6/15], Loss: 0.4133
+Epoch [7/15], Loss: 0.3000
+Epoch [8/15], Loss: 0.3588
+Epoch [9/15], Loss: 0.2410
+Epoch [10/15], Loss: 0.0421
+Epoch [11/15], Loss: 0.0208
+Epoch [12/15], Loss: 0.0135
 Epoch [13/15], Loss: 0.0629
-Epoch [14/15], Loss: 0.0096
-Epoch [15/15], Loss: 0.0013
+Epoch [14/15], Loss: 0.0067
+Epoch [15/15], Loss: 0.0165
+-----------------------------
+
+--------Log Output-----------
+Varient: Increased Kernel Size Only
+Epoch [1/15], Loss: 1.0391
+Epoch [2/15], Loss: 0.7585
+Epoch [3/15], Loss: 0.7005
+Epoch [4/15], Loss: 0.7882
+Epoch [5/15], Loss: 0.4910
+Epoch [6/15], Loss: 0.7140
+Epoch [7/15], Loss: 0.5465
+Epoch [8/15], Loss: 0.2754
+Epoch [9/15], Loss: 0.2429
+Epoch [10/15], Loss: 0.1275
+Epoch [11/15], Loss: 0.0630
+Epoch [12/15], Loss: 0.0510
+Epoch [13/15], Loss: 0.0635
+Epoch [14/15], Loss: 0.0075
+Epoch [15/15], Loss: 0.0619
+-----------------------------
+
+--------Log Output----------- 
+Varient: Both Additional Convolutional Layer and Increased Kernel Size
+Epoch [1/15], Loss: 0.9106
+Epoch [2/15], Loss: 0.8368
+Epoch [3/15], Loss: 0.8305
+Epoch [4/15], Loss: 0.8134
+Epoch [5/15], Loss: 0.7043
+Epoch [6/15], Loss: 0.7611
+Epoch [7/15], Loss: 0.4644
+Epoch [8/15], Loss: 0.3357
+Epoch [9/15], Loss: 0.2312
+Epoch [10/15], Loss: 0.1233
+Epoch [11/15], Loss: 0.0579
+Epoch [12/15], Loss: 0.0345
+Epoch [13/15], Loss: 0.0314
+Epoch [14/15], Loss: 0.0748
+Epoch [15/15], Loss: 0.0027
 -----------------------------
 """
