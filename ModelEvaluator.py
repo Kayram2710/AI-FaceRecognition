@@ -100,8 +100,8 @@ def evaluate(path):
     micro_precision, micro_recall, micro_f1, _ = precision_recall_fscore_support(real, prediction, average='micro')
     accuracy = accuracy_score(real, prediction)
 
-    #Return dictionary of all scores
-    return {
+    #Create result dictionary
+    results = {
         'Macro Precision': precision,
         'Macro Recall': recall,
         'Macro F1-Score': f1_score,
@@ -111,14 +111,23 @@ def evaluate(path):
         'Accuracy': accuracy
     }
 
-print(evaluate("MainModel"))
-print(evaluate("Varient1"))
-print(evaluate("Varient2"))
+    #Log feedback
+    print(f"Result for {path}:\n{results}")
+
+    #Return dictionary of all scores
+    return results
+
+evaluate("MainModel")
+evaluate("Varient1")
+evaluate("Varient2")
 
 """
 --------Log Output-----------
+Result for MainModel:
 {'Macro Precision': 0.5812893612235718, 'Macro Recall': 0.565018315018315, 'Macro F1-Score': 0.5717070799413753, 'Micro Precision': 0.5527065527065527, 'Micro Recall': 0.5527065527065527, 'Micro F1-Score': 0.5527065527065527, 'Accuracy': 0.5527065527065527}
+Result for Varient1:
 {'Macro Precision': 0.6127269848713761, 'Macro Recall': 0.6108058608058607, 'Macro F1-Score': 0.6096439129276968, 'Micro Precision': 0.5982905982905983, 'Micro Recall': 0.5982905982905983, 'Micro F1-Score': 0.5982905982905983, 'Accuracy': 0.5982905982905983}
+Result for Varient2:
 {'Macro Precision': 0.5595254874437258, 'Macro Recall': 0.5329670329670331, 'Macro F1-Score': 0.51985658800616, 'Micro Precision': 0.5242165242165242, 'Micro Recall': 0.5242165242165242, 'Micro F1-Score': 0.5242165242165242, 'Accuracy': 0.5242165242165242}
 -----------------------------
 """
