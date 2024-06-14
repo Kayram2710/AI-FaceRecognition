@@ -83,7 +83,7 @@ def train(path, epochs = 15):
     elif(path == "Varient2"):
         model = V2().to(device)
     else:
-        model = Main().to(device)
+        model = Main().to(device) #Allows toss up path
 
     #Create a call for the "Cross Entrop Loss" function
     #This function will calculate the differance across 
@@ -96,13 +96,13 @@ def train(path, epochs = 15):
     #Retrieve Dataset
     dataset, valDataset = getDataset()
 
-    #Setting model to training mode
-    model.train()
-
     #Start looping through epochs
     for epoch in range(epochs):
 
-        #For loop through each image in the dataset and return the images and theyre label
+        #Setting model to training mode
+        model.train()
+
+        #For loop through each image in the dataset and return the images and their label
         for images, labels in dataset:
 
             #Moving tensors to the chosen device
@@ -125,40 +125,49 @@ def train(path, epochs = 15):
             #Optimize accordingly
             optimizer.step()
 
-        # Validation phase ----------------------------------
+        #Setting model to validation phase
         model.eval()
-        with torch.no_grad():
-            for images, labels in valDataset:
-                images = images.to(device)
-                labels = labels.to(device)
-                outputs = model(images)
-                val_loss = criterion(outputs, labels)
+     
+        #For loop through each image in the validation dataset and return the images and their label
+        for images, labels in valDataset:
+
+            #Moving tensors to the chosen device
+            images = images.to(device)
+            labels = labels.to(device)
+
+            #retrive the model's prediction by passing images through label
+            validationPrediction = model(images)
+
+            #Compute the differance between the predicted labels and actual labels by using the "Cross Entrop Loss" through criterion
+            validationLoss = criterion(validationPrediction, labels)
         
-        print(f'Epoch [{epoch+1}/{epochs}], Training Loss: {loss.item():.4f}, Validation Loss: {val_loss.item():.4f}')
+        #Output result
+        print(f'Epoch [{epoch+1}/{epochs}], Training Loss: {loss.item():.4f}, Validation Loss: {validationLoss.item():.4f}')
 
         #Early stop procedure
         #If epoch is at 0, do nothing
         if(epoch == 0):
             ""
         #Else check if new loss is greater then previous
-        elif(loss.item() >= PreviousLoss):
+        elif(validationLoss.item() >= PreviousLoss):
             countFluctuation = 1 + countFluctuation #If it is count the fluctuation
         else:
             countFluctuation = 0 #If it isnt reset it
         
         #Note down previous loss
-        PreviousLoss = loss.item()
+        PreviousLoss = validationLoss.item()
 
         #Then check if count equal or surpasses treshold
         if(countFluctuation >= fluctuationTreshold):
             print(f'Exited program due to too many fluctuation')
-            torch.save(model, f'SavedModels/{path}.pth')
+            torch.save(model.state_dict(), f'SavedModels/{path}.pth')
             return #return and end
         
-
     #return the model
-    torch.save(model, f'SavedModels/{path}.pth')
+    torch.save(model.state_dict(), f'SavedModels/{path}.pth')
 
 
-#Call the train function
-train("Test")
+#Call the train functions
+train("MainModel")
+train("Varient1")
+train("Varient2")

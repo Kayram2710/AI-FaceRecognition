@@ -160,20 +160,16 @@ Epoch [15/15], Loss: 0.0619
 
 --------Log Output----------- 
 Varient: Both Additional Convolutional Layer and Increased Kernel Size
-Epoch [1/15], Loss: 0.9106
-Epoch [2/15], Loss: 0.8368
-Epoch [3/15], Loss: 0.8305
-Epoch [4/15], Loss: 0.8134
-Epoch [5/15], Loss: 0.7043
-Epoch [6/15], Loss: 0.7611
-Epoch [7/15], Loss: 0.4644
-Epoch [8/15], Loss: 0.3357
-Epoch [9/15], Loss: 0.2312
-Epoch [10/15], Loss: 0.1233
-Epoch [11/15], Loss: 0.0579
-Epoch [12/15], Loss: 0.0345
-Epoch [13/15], Loss: 0.0314
-Epoch [14/15], Loss: 0.0748
-Epoch [15/15], Loss: 0.0027
+Epoch [1/15], Training Loss: 0.9576, Validation Loss: 1.1163
+Epoch [2/15], Training Loss: 0.8429, Validation Loss: 0.8878
+Epoch [3/15], Training Loss: 0.7325, Validation Loss: 0.8325
+Epoch [4/15], Training Loss: 0.7127, Validation Loss: 0.6414
+Epoch [5/15], Training Loss: 0.7423, Validation Loss: 0.9200
+Epoch [6/15], Training Loss: 0.7353, Validation Loss: 0.5523
+Epoch [7/15], Training Loss: 0.6090, Validation Loss: 0.9177
+Epoch [8/15], Training Loss: 0.2310, Validation Loss: 0.5894
+Epoch [9/15], Training Loss: 0.3616, Validation Loss: 0.7341
+Epoch [10/15], Training Loss: 0.3053, Validation Loss: 1.9367
+Exited program due to too many fluctuation
 -----------------------------
 """

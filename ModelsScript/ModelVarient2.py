@@ -125,20 +125,20 @@ Epoch [15/15], Loss: 0.1772
 
 --------Log Output----------- 
 Varient: Both Removed Convolutional Layer and Decreased Kernel Size
-Epoch [1/15], Loss: 6.3667
-Epoch [2/15], Loss: 5.8932
-Epoch [3/15], Loss: 18.3913
-Epoch [4/15], Loss: 5.0900
-Epoch [5/15], Loss: 3.3019
-Epoch [6/15], Loss: 3.1841
-Epoch [7/15], Loss: 1.3969
-Epoch [8/15], Loss: 0.9858
-Epoch [9/15], Loss: 1.5207
-Epoch [10/15], Loss: 0.8765
-Epoch [11/15], Loss: 0.4995
-Epoch [12/15], Loss: 2.4214
-Epoch [13/15], Loss: 1.1823
-Epoch [14/15], Loss: 0.8789
-Epoch [15/15], Loss: 0.6938
+Epoch [1/15], Training Loss: 4.0488, Validation Loss: 3.1089
+Epoch [2/15], Training Loss: 1.5199, Validation Loss: 1.3053
+Epoch [3/15], Training Loss: 1.6142, Validation Loss: 1.2135
+Epoch [4/15], Training Loss: 1.1551, Validation Loss: 1.5750
+Epoch [5/15], Training Loss: 1.1071, Validation Loss: 1.3893
+Epoch [6/15], Training Loss: 0.6416, Validation Loss: 0.7675
+Epoch [7/15], Training Loss: 1.2026, Validation Loss: 1.7823
+Epoch [8/15], Training Loss: 1.0687, Validation Loss: 1.2099
+Epoch [9/15], Training Loss: 1.2628, Validation Loss: 1.7213
+Epoch [10/15], Training Loss: 1.0916, Validation Loss: 1.0847
+Epoch [11/15], Training Loss: 0.7016, Validation Loss: 1.2283
+Epoch [12/15], Training Loss: 0.9602, Validation Loss: 1.0593
+Epoch [13/15], Training Loss: 0.6584, Validation Loss: 1.2288
+Epoch [14/15], Training Loss: 0.9142, Validation Loss: 1.1670
+Epoch [15/15], Training Loss: 0.8069, Validation Loss: 1.0080
 -----------------------------
 """

@@ -97,20 +97,19 @@ class FaceRecognitionModel(network.Module):
 #This is the output
 """
 --------Log Output-----------
-Epoch [1/15], Loss: 0.8234
-Epoch [2/15], Loss: 0.8687
-Epoch [3/15], Loss: 0.6796
-Epoch [4/15], Loss: 0.7594
-Epoch [5/15], Loss: 0.3970
-Epoch [6/15], Loss: 0.2975
-Epoch [7/15], Loss: 0.3760
-Epoch [8/15], Loss: 0.2321
-Epoch [9/15], Loss: 0.1697
-Epoch [10/15], Loss: 0.0298
-Epoch [11/15], Loss: 0.0119
-Epoch [12/15], Loss: 0.0034
-Epoch [13/15], Loss: 0.0032
-Epoch [14/15], Loss: 0.0007
-Epoch [15/15], Loss: 0.0020
+Epoch [1/15], Training Loss: 1.2089, Validation Loss: 1.1799
+Epoch [2/15], Training Loss: 0.8870, Validation Loss: 0.9139
+Epoch [3/15], Training Loss: 0.8267, Validation Loss: 0.9611
+Epoch [4/15], Training Loss: 0.6360, Validation Loss: 0.8846
+Epoch [5/15], Training Loss: 0.6449, Validation Loss: 0.8173
+Epoch [6/15], Training Loss: 0.4758, Validation Loss: 0.9664
+Epoch [7/15], Training Loss: 0.3062, Validation Loss: 0.8261
+Epoch [8/15], Training Loss: 0.1860, Validation Loss: 1.7813
+Epoch [9/15], Training Loss: 0.1190, Validation Loss: 0.9673
+Epoch [10/15], Training Loss: 0.0671, Validation Loss: 1.4820
+Epoch [11/15], Training Loss: 0.0395, Validation Loss: 1.1336
+Epoch [12/15], Training Loss: 0.0279, Validation Loss: 1.9258
+Epoch [13/15], Training Loss: 0.0148, Validation Loss: 1.9998
+Exited program due to too many fluctuation
 -----------------------------
 """
