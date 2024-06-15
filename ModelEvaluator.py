@@ -105,7 +105,7 @@ def evaluate(path):
     cmMatrix = confusion_matrix(real, prediction)
 
     #Generate labels
-    labels = {0: "Angry", 1: "Focused", 2: "Happy", 3: "Neutral"}
+    labels = ["Angry", "Focused","Happy", "Neutral"]
 
     #Generate Display
     display = metrics.ConfusionMatrixDisplay(confusion_matrix=cmMatrix, display_labels=labels)
