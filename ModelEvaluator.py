@@ -2,8 +2,9 @@ import torch
 import numpy as np
 from torchvision import datasets, transforms
 from torch.utils.data import DataLoader, Subset
-from sklearn.metrics import precision_recall_fscore_support, accuracy_score
+from sklearn.metrics import precision_recall_fscore_support, accuracy_score, confusion_matrix
 from sklearn.model_selection import train_test_split
+import matplotlib.pyplot as plt
 from ModelsScript.ModelMain import FaceRecognitionModel as Main
 from ModelsScript.ModelVarient1 import FaceRecognitionModel as V1
 from ModelsScript.ModelVarient2 import FaceRecognitionModel as V2
@@ -94,6 +95,16 @@ def evaluate(path):
         #Extend lists real and prediction for the computations
         prediction.extend(predicted.cpu().numpy())
         real.extend(labels.cpu().numpy())
+
+    #Generate confusion matrix based on axis
+    confusion_matrix = confusion_matrix(real, prediction)
+
+    #Generate Display
+    display = metrics.ConfusionMatrixDisplay(confusion_matrix = confusion_matrix, display_labels = [0, 1])
+
+    #Plot display
+    display.plot()
+    plt.show()
 
     #Get the values using functions
     precision, recall, f1_score, _ = precision_recall_fscore_support(real, prediction, average='macro')
