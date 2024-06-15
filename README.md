@@ -60,7 +60,7 @@ ModelVarient2.py:
 ### ModelEvaluator.py
 > This python script sets up an evaluate function that will calcualte many mathematical properties regarding a saved and trained AI model from the local machine
 
-> The results of the function are printed on screen once the script is ran
+> The results of the function are printed on screen once the script is ran and the confusion matrices pop up in a tab as its being ran
 
 > It can be executed by simply calling it from the command line, with the prerequisite of having the dependency torch, torchvision, and sklearn installed, additionally, it is required to have a "SavedModels" folder, present in the directory where the script will be executed, this folder needs to have the three models that will be generated after running ModelTrainer.py present
 
@@ -77,6 +77,8 @@ ModelVarient2.py:
 
 ### Visualisation Results Folder
 > This folder contains the results saved while executing DataVisualer.py
+
+> Additionally it contains the confusion matrices generated while executing ModelEvaluator.py
 
 ### WebPageDownloader.py
 > This is the python script that what used to collect raw data for the focused/engaged category
