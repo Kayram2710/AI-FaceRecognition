@@ -70,7 +70,11 @@ def evaluate(path):
         return False #Does not allow for a toss up path
 
     #Loading Model
-    model.load_state_dict(torch.load(f"SavedModels/{path}.pth"))
+    model.load_state_dict(
+        torch.load(
+            (f"SavedModels/{path}.pth")
+            #, map_location=torch.device('cpu') #Uncomment if running on cpu
+            ))
     
     #Send it to selected device
     model.to(device)
@@ -100,8 +104,11 @@ def evaluate(path):
     #Generate confusion matrix based on axis
     cmMatrix = confusion_matrix(real, prediction)
 
+    #Generate labels
+    labels = {0: "Angry", 1: "Focused", 2: "Happy", 3: "Neutral"}
+
     #Generate Display
-    display = metrics.ConfusionMatrixDisplay(confusion_matrix=cmMatrix, display_labels=["Class 0", "Class 1"])
+    display = metrics.ConfusionMatrixDisplay(confusion_matrix=cmMatrix, display_labels=labels)
 
     #Plot display
     display.plot()
