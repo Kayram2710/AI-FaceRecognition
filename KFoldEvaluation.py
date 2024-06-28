@@ -353,6 +353,7 @@ Epoch [6/15], Training Loss: 0.6508, Validation Loss: 0.9585
 Epoch [7/15], Training Loss: 0.2924, Validation Loss: 1.3900
 End of training due to too many fluctuation
 Result:
+
 {'Macro Precision': 0.6244, 'Macro Recall': 0.617, 'Macro F1-Score': 0.6096, 'Micro Precision': 0.618, 'Micro Recall': 0.618, 'Micro F1-Score': 0.618, 'Accuracy': 0.618}
 Fold 1:
 {'Macro Precision': 0.6282, 'Macro Recall': 0.5974, 'Macro F1-Score': 0.6077, 'Micro Precision': 0.5855, 'Micro Recall': 0.5855, 'Micro F1-Score': 0.5855, 'Accuracy': 0.5855}
