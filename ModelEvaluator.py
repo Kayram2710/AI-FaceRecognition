@@ -1,3 +1,4 @@
+import os
 import torch
 import numpy as np
 from torchvision import datasets, transforms
@@ -9,6 +10,10 @@ import matplotlib.pyplot as plt
 from ModelsScript.ModelMain import FaceRecognitionModel as Main
 from ModelsScript.ModelVarient1 import FaceRecognitionModel as V1
 from ModelsScript.ModelVarient2 import FaceRecognitionModel as V2
+
+#Create device to run model
+#This is to allow the the program to run on a GPU
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 #Define function for returning dataset
 def getDataset(path = "Cleaned Dataset"):
@@ -48,31 +53,42 @@ def getDataset(path = "Cleaned Dataset"):
     #return created dataset
     return testingData
 
+#Create a function too chose a structure
+def chooseStructure(path):
+    
+    state_dict = torch.load(path)
+    testingVar = str((state_dict["initialSequence.0.weight"]).shape)
+
+    #Instantiate Model Depending on path chosen
+    if(testingVar == "torch.Size([32, 1, 5, 5])"):
+        model = V1().to(device)
+    elif(testingVar == "torch.Size([32, 1, 1, 1])"):
+        model = V2().to(device)
+    elif(testingVar == "torch.Size([32, 1, 3, 3])"):
+       model = Main().to(device)
+
+    return model
+
 
 #Create evaluation function
-def evaluate(path):
+def evaluate(name):
+
+    #Define ful path
+    path = f"SavedModels/{name}.pth"
 
     #Get Testing Data
     testingData = getDataset()
 
-    #Create device to run model
-    #This is to allow the the program to run on a GPU
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
-    #Instantiate Model Depending on path chosen
-    if(path == "Varient1"):
-        model = V1().to(device)
-    elif(path == "Varient2"):
-        model = V2().to(device)
-    elif(path == "MainModel"):
-        model = Main().to(device)
-    else:
+    #Check if path exists
+    if not os.path.exists(path):
         return False #Does not allow for a toss up path
+    
+    model = chooseStructure(path)
 
     #Loading Model
     model.load_state_dict(
         torch.load(
-            (f"SavedModels/{path}.pth")
+            (path)
             #, map_location=torch.device('cpu') #Uncomment if running on cpu
             ))
     
@@ -131,22 +147,27 @@ def evaluate(path):
     }
 
     #Log feedback
-    print(f"Result for {path}:\n{results}")
+    print(f"Result for {name}:\n{results}")
 
     #Return dictionary of all scores
     return results
 
-evaluate("MainModel")
-evaluate("Varient1")
-evaluate("Varient2")
+#evaluate("MainModel")
+#evaluate("Varient1")
+#evaluate("Varient2")
+evaluate("CurrentBest")
 
 """
---------Log Output-----------
+--------Log Output Pre Mitigation-----------
 Result for MainModel:
 {'Macro Precision': 0.5812893612235718, 'Macro Recall': 0.565018315018315, 'Macro F1-Score': 0.5717070799413753, 'Micro Precision': 0.5527065527065527, 'Micro Recall': 0.5527065527065527, 'Micro F1-Score': 0.5527065527065527, 'Accuracy': 0.5527065527065527}
 Result for Varient1:
 {'Macro Precision': 0.6127269848713761, 'Macro Recall': 0.6108058608058607, 'Macro F1-Score': 0.6096439129276968, 'Micro Precision': 0.5982905982905983, 'Micro Recall': 0.5982905982905983, 'Micro F1-Score': 0.5982905982905983, 'Accuracy': 0.5982905982905983}
 Result for Varient2:
 {'Macro Precision': 0.5595254874437258, 'Macro Recall': 0.5329670329670331, 'Macro F1-Score': 0.51985658800616, 'Micro Precision': 0.5242165242165242, 'Micro Recall': 0.5242165242165242, 'Micro F1-Score': 0.5242165242165242, 'Accuracy': 0.5242165242165242}
+-----------------------------
+--------Log Output Post Mitigation for "CurrentBest"-----------
+Result for CurrentBest:
+{'Macro Precision': 0.566968892820286, 'Macro Recall': 0.5454473306446991, 'Macro F1-Score': 0.5513555682036281, 'Micro Precision': 0.5355329949238579, 'Micro Recall': 0.5355329949238579, 'Micro F1-Score': 0.5355329949238579, 'Accuracy': 0.5355329949238579}
 -----------------------------
 """

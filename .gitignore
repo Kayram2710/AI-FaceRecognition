@@ -1,3 +1,4 @@
-Raw Data
-Saved Models
-ModelsScript\__pycache__
+Raw Data/
+SavedModels/
+ModelsScript/__pycache__
+downloaded_images/

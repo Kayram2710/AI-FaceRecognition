@@ -48,10 +48,11 @@ def download_images_selenium(url, folder="downloaded_images", start_image_id=1, 
     return image_count
 
 #Manually Setting fetch
-image_id = 528
-i = 12
+image_id = 625
 
-#link = "https://www.freepik.com/search?ai=excluded&format=search&last_filter=people_range&last_value=1&people=include&people_range=1&query=focused+people&selection=1&type=photo"
-link = f"https://www.freepik.com/search?ai=excluded&format=search&last_filter=page&last_value={i}&page={i}&people=include&people_range=1&query=focused+people&selection=1&type=photo"
+#i = 12
+#link = f"https://www.freepik.com/search?ai=excluded&format=search&last_filter=page&last_value={i}&page={i}&people=include&people_range=1&query=focused+people&selection=1&type=photo"
+
+link = f"https://www.freepik.com/search?ai=excluded&format=search&last_filter=query&last_value=focused+person&people=include&people_ethnicity=east-asian&people_range=1&query=focused+person&selection=1&type=photo"
 
 download_images_selenium(link, start_image_id=image_id)

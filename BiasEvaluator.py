@@ -6,6 +6,8 @@ from torchvision import datasets, transforms
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import precision_recall_fscore_support, accuracy_score
 from ModelsScript.ModelMain import FaceRecognitionModel as Main
+from ModelsScript.ModelVarient1 import FaceRecognitionModel as V1
+from ModelsScript.ModelVarient2 import FaceRecognitionModel as V2
 
 #Setup global variable for script
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -38,14 +40,25 @@ def getDataset(path = "Cleaned Dataset"):
     return testingIndices, dataset
 
 #Create evaluation function
-def evaluate(dataset):
+def evaluate(dataset, path):
 
-    model = Main().to(device)
+    path = f"SavedModels/{path}.pth"
+
+    state_dict = torch.load(path)
+    testingVar = str((state_dict["initialSequence.0.weight"]).shape)
+
+    #Instantiate Model Depending on path chosen
+    if(testingVar == "torch.Size([32, 1, 5, 5])"):
+        model = V1().to(device)
+    elif(testingVar == "torch.Size([32, 1, 1, 1])"):
+        model = V2().to(device)
+    elif(testingVar == "torch.Size([32, 1, 3, 3])"):
+       model = Main().to(device)
 
     #Loading Model
     model.load_state_dict(
         torch.load(
-            (f"SavedModels/MainModel.pth")
+            (path)
             #, map_location=torch.device('cpu') #Uncomment if running on cpu
             ))
     
@@ -115,7 +128,7 @@ def readCsv(path = "DataAnnotations.csv"):
     return result
 
 #Creating function to run bias analysis
-def runBiasEvaluation():
+def runBiasEvaluation(path):
 
     #Create empty dict
     results = {}
@@ -149,7 +162,7 @@ def runBiasEvaluation():
         data = DataLoader(dataset=data,batch_size=40,shuffle=True)
 
         #Evaluate current group
-        result = evaluate(data)
+        result = evaluate(data,path)
         #Add total images
         result["Number of Images"] = len(selectedDataIndices)
         #Add to results
@@ -184,7 +197,7 @@ def runBiasEvaluation():
         data = DataLoader(dataset=data,batch_size=40,shuffle=True)
 
         #Evaluate current group
-        result = evaluate(data)
+        result = evaluate(data,path)
         #Add total images
         result["Number of Images"] = len(selectedDataIndices)
         #Add to results
@@ -226,10 +239,10 @@ def getAverage(results,type):
     #Return results
     return results
 
-runBiasEvaluation()
+runBiasEvaluation("CurrentBest")
 
 """
---------Log Output-----------
+--------Log Output Pre mitigation for "Main Model"-----------
 Gender bias for Male:
 {'Macro Precision': 0.5993, 'Macro Recall': 0.5946, 'Macro F1-Score': 0.5969, 'Accuracy': 0.5698, 'Number of Images': 179}
 
@@ -253,5 +266,30 @@ Race bias for Asian:
 
 Averages/Totals for Race bias:
 {'Macro Precision': 0.5738, 'Macro Recall': 0.5595, 'Macro F1-Score': 0.5559, 'Accuracy': 0.5409, 'Total Images': 351}
+-----------------------------
+--------Log Output Post Mitigation for "CurrentBest"-----------
+Gender bias for Male:
+{'Macro Precision': 0.5849, 'Macro Recall': 0.567, 'Macro F1-Score': 0.5705, 'Accuracy': 0.5917, 'Number of Images': 169}
+
+Gender bias for Female:
+{'Macro Precision': 0.5199, 'Macro Recall': 0.4984, 'Macro F1-Score': 0.5008, 'Accuracy': 0.5, 'Number of Images': 126}
+
+Gender bias for Other:
+{'Macro Precision': 0.5239, 'Macro Recall': 0.4922, 'Macro F1-Score': 0.5046, 'Accuracy': 0.4848, 'Number of Images': 99}
+
+Averages/Totals for Gender bias:
+{'Macro Precision': 0.5429, 'Macro Recall': 0.5192, 'Macro F1-Score': 0.5253, 'Accuracy': 0.5255, 'Total Images': 394}
+
+Race bias for White:
+{'Macro Precision': 0.5639, 'Macro Recall': 0.5366, 'Macro F1-Score': 0.5442, 'Accuracy': 0.521, 'Number of Images': 286}
+
+Race bias for Black:
+{'Macro Precision': 0.571, 'Macro Recall': 0.5439, 'Macro F1-Score': 0.5505, 'Accuracy': 0.6111, 'Number of Images': 72}
+
+Race bias for Asian:
+{'Macro Precision': 0.4746, 'Macro Recall': 0.4896, 'Macro F1-Score': 0.4772, 'Accuracy': 0.5, 'Number of Images': 36}
+
+Averages/Totals for Race bias:
+{'Macro Precision': 0.5365, 'Macro Recall': 0.5234, 'Macro F1-Score': 0.524, 'Accuracy': 0.544, 'Total Images': 394}
 -----------------------------
 """

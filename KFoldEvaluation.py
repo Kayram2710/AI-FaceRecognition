@@ -6,6 +6,8 @@ from torchvision import datasets, transforms
 from sklearn.metrics import precision_recall_fscore_support, accuracy_score
 from sklearn.model_selection import KFold, train_test_split
 from ModelsScript.ModelMain import FaceRecognitionModel as Main
+from ModelsScript.ModelVarient1 import FaceRecognitionModel as V1
+from ModelsScript.ModelVarient2 import FaceRecognitionModel as V2
 
 #Setup global variable for script
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -80,12 +82,9 @@ def evaluate(model, dataset):
     return results
 
 #Define function to train the model
-def train(model, trainingData, validationData):
-    #Deciding on 15 epochs
-    epochs = 15
-
+def train(model, trainingData, validationData, type=0, epochs = 15, treshold = 2):
     #Writing parameters for early stoping procedure
-    fluctuationTreshold = 2 #Patience level of 2
+    fluctuationTreshold = treshold #Patience level of 2
     countFluctuation = 0 #Count start at 0
     PreviousLoss = 0 #Create variable to store previous loss
 
@@ -166,7 +165,7 @@ def train(model, trainingData, validationData):
     return model
 
 #Creating function to run Kfold
-def runKfold(folds=10):
+def runKfold(folds=10, type=0, epochs = 15, treshold = 2):
 
     #Setting up Kfold
     kf = KFold(n_splits=folds, shuffle=True, random_state=50)
@@ -179,7 +178,13 @@ def runKfold(folds=10):
     for fold, (trainIndices, testIndices) in enumerate(kf.split(datasetIndices)):
 
         #Instatiate Model
-        model = Main().to(device)
+        #Instantiate Model Depending on type fed
+        if(type == 1):
+            model = V1().to(device)
+        elif(type == 2):
+            model = V2().to(device)
+        else:
+            model = Main().to(device) #Allows toss up path
 
         #Splitting the data to retrieve testing group
         trainIndices, validationIndices = train_test_split(
@@ -201,7 +206,7 @@ def runKfold(folds=10):
         testingData = DataLoader(dataset=testingData,batch_size=40,shuffle=True)
 
         #Train model
-        model = train(model, trainingData, validationData)
+        model = train(model, trainingData, validationData,type,epochs,treshold)
 
         #Evaluate model
         result = evaluate(model, testingData)
@@ -244,10 +249,12 @@ def getAverage(results):
     #Return results
     return results
 
-runKfold()
+#runKfold(folds=10 ,type=0, treshold=2) #Kfold to match old model (pre-bias Mitigation)
+
+runKfold(folds=10 ,type=1, treshold=3) #Kfold to match new model
 
 """
---------Log Output-----------
+--------Log Output Pre-Bias Mitigation-----------
 Epoch [1/15], Training Loss: 0.9827, Validation Loss: 1.0847
 Epoch [2/15], Training Loss: 0.8479, Validation Loss: 0.7887
 Epoch [3/15], Training Loss: 0.6408, Validation Loss: 0.9857
@@ -388,4 +395,197 @@ Fold 10:
 Averages:
 {'Macro Precision': 0.6005, 'Macro Recall': 0.585, 'Macro F1-Score': 0.5783, 'Micro Precision': 0.5722, 'Micro Recall': 0.5722, 'Micro F1-Score': 0.5722, 'Accuracy': 0.5722}
 -----------------------------
+--------Log Output Post Mitigation for Variant 1-----------
+Epoch [1/15], Training Loss: 1.4501, Validation Loss: 1.1627
+Epoch [2/15], Training Loss: 0.7838, Validation Loss: 1.0487
+Epoch [3/15], Training Loss: 1.1335, Validation Loss: 0.9497
+Epoch [4/15], Training Loss: 0.9697, Validation Loss: 1.0921
+Epoch [5/15], Training Loss: 1.0606, Validation Loss: 0.8692
+Epoch [6/15], Training Loss: 0.7835, Validation Loss: 0.8005
+Epoch [7/15], Training Loss: 0.6033, Validation Loss: 1.2382
+Epoch [8/15], Training Loss: 0.3184, Validation Loss: 1.4174
+Epoch [9/15], Training Loss: 0.1839, Validation Loss: 1.3122
+Epoch [10/15], Training Loss: 0.1037, Validation Loss: 1.4122
+Epoch [11/15], Training Loss: 0.0685, Validation Loss: 2.8086
+Epoch [12/15], Training Loss: 0.2423, Validation Loss: 2.8332
+End of training due to too many fluctuation
+Result:
+{'Macro Precision': 0.4903, 'Macro Recall': 0.5001, 'Macro F1-Score': 0.4775, 'Micro Precision': 0.4867, 'Micro Recall': 0.4867, 'Micro F1-Score': 0.4867, 'Accuracy': 0.4867}
+Epoch [1/15], Training Loss: 0.9621, Validation Loss: 1.1008
+Epoch [2/15], Training Loss: 0.7809, Validation Loss: 0.8876
+Epoch [3/15], Training Loss: 0.9188, Validation Loss: 0.9704
+Epoch [4/15], Training Loss: 0.8286, Validation Loss: 0.9708
+Epoch [5/15], Training Loss: 1.2379, Validation Loss: 0.9040
+Epoch [6/15], Training Loss: 0.9447, Validation Loss: 0.8675
+Epoch [7/15], Training Loss: 0.0936, Validation Loss: 1.4223
+Epoch [8/15], Training Loss: 0.0244, Validation Loss: 1.1303
+Epoch [9/15], Training Loss: 0.0704, Validation Loss: 2.7175
+Epoch [10/15], Training Loss: 0.0097, Validation Loss: 1.3240
+Epoch [11/15], Training Loss: 0.0028, Validation Loss: 2.6772
+Epoch [12/15], Training Loss: 0.0004, Validation Loss: 2.7093
+Epoch [13/15], Training Loss: 0.0064, Validation Loss: 2.2554
+Epoch [14/15], Training Loss: 0.0013, Validation Loss: 2.6722
+Epoch [15/15], Training Loss: 0.0002, Validation Loss: 2.5894
+Result:
+{'Macro Precision': 0.5311, 'Macro Recall': 0.5423, 'Macro F1-Score': 0.5357, 'Micro Precision': 0.5209, 'Micro Recall': 0.5209, 'Micro F1-Score': 0.5209, 'Accuracy': 0.5209}
+Epoch [1/15], Training Loss: 1.0224, Validation Loss: 1.1420
+Epoch [2/15], Training Loss: 1.3521, Validation Loss: 1.1098
+Epoch [3/15], Training Loss: 0.7865, Validation Loss: 1.0619
+Epoch [4/15], Training Loss: 0.6628, Validation Loss: 0.8148
+Epoch [5/15], Training Loss: 0.1020, Validation Loss: 1.5162
+Epoch [6/15], Training Loss: 0.5773, Validation Loss: 2.3477
+Epoch [7/15], Training Loss: 0.0144, Validation Loss: 1.6427
+Epoch [8/15], Training Loss: 0.0290, Validation Loss: 2.1918
+Epoch [9/15], Training Loss: 0.0022, Validation Loss: 3.0009
+Epoch [10/15], Training Loss: 0.0026, Validation Loss: 2.1042
+Epoch [11/15], Training Loss: 0.6407, Validation Loss: 3.1773
+Epoch [12/15], Training Loss: 0.0123, Validation Loss: 3.7873
+Epoch [13/15], Training Loss: 0.0007, Validation Loss: 2.4586
+Epoch [14/15], Training Loss: 0.0013, Validation Loss: 2.8613
+Epoch [15/15], Training Loss: 0.0041, Validation Loss: 2.1772
+Result:
+{'Macro Precision': 0.5915, 'Macro Recall': 0.6025, 'Macro F1-Score': 0.5959, 'Micro Precision': 0.597, 'Micro Recall': 0.597, 'Micro F1-Score': 0.597, 'Accuracy': 0.597}   
+Epoch [1/15], Training Loss: 0.9594, Validation Loss: 1.0507
+Epoch [2/15], Training Loss: 0.8965, Validation Loss: 1.0405
+Epoch [3/15], Training Loss: 1.4305, Validation Loss: 0.9356
+Epoch [4/15], Training Loss: 0.6325, Validation Loss: 0.9834
+Epoch [5/15], Training Loss: 0.5561, Validation Loss: 1.8453
+Epoch [6/15], Training Loss: 0.4080, Validation Loss: 1.6083
+Epoch [7/15], Training Loss: 0.0035, Validation Loss: 1.7126
+Epoch [8/15], Training Loss: 0.0702, Validation Loss: 1.9323
+Epoch [9/15], Training Loss: 0.0016, Validation Loss: 1.0107
+Epoch [10/15], Training Loss: 0.0027, Validation Loss: 3.2418
+Epoch [11/15], Training Loss: 0.0233, Validation Loss: 2.7883
+Epoch [12/15], Training Loss: 0.0009, Validation Loss: 2.9416
+Epoch [13/15], Training Loss: 0.0024, Validation Loss: 2.4332
+Epoch [14/15], Training Loss: 0.0007, Validation Loss: 1.7113
+Epoch [15/15], Training Loss: 0.0014, Validation Loss: 2.9388
+Result:
+{'Macro Precision': 0.5114, 'Macro Recall': 0.5163, 'Macro F1-Score': 0.5131, 'Micro Precision': 0.4924, 'Micro Recall': 0.4924, 'Micro F1-Score': 0.4924, 'Accuracy': 0.4924}
+Epoch [1/15], Training Loss: 1.1206, Validation Loss: 1.1518
+Epoch [2/15], Training Loss: 0.8515, Validation Loss: 1.0138
+Epoch [3/15], Training Loss: 1.4466, Validation Loss: 1.1733
+Epoch [4/15], Training Loss: 0.8636, Validation Loss: 1.0035
+Epoch [5/15], Training Loss: 1.1979, Validation Loss: 1.0629
+Epoch [6/15], Training Loss: 0.4096, Validation Loss: 1.0348
+Epoch [7/15], Training Loss: 0.2174, Validation Loss: 2.8563
+Epoch [8/15], Training Loss: 0.0113, Validation Loss: 1.4776
+Epoch [9/15], Training Loss: 0.0326, Validation Loss: 2.3018
+Epoch [10/15], Training Loss: 0.0038, Validation Loss: 1.4126
+Epoch [11/15], Training Loss: 0.0022, Validation Loss: 1.5126
+Epoch [12/15], Training Loss: 0.0065, Validation Loss: 2.2356
+Epoch [13/15], Training Loss: 0.0058, Validation Loss: 1.8866
+Epoch [14/15], Training Loss: 0.0003, Validation Loss: 3.6192
+Epoch [15/15], Training Loss: 0.0040, Validation Loss: 4.9784
+Result:
+{'Macro Precision': 0.5793, 'Macro Recall': 0.5858, 'Macro F1-Score': 0.5818, 'Micro Precision': 0.5954, 'Micro Recall': 0.5954, 'Micro F1-Score': 0.5954, 'Accuracy': 0.5954}
+Epoch [1/15], Training Loss: 1.3664, Validation Loss: 1.0856
+Epoch [2/15], Training Loss: 0.9216, Validation Loss: 1.0145
+Epoch [3/15], Training Loss: 0.8730, Validation Loss: 1.0548
+Epoch [4/15], Training Loss: 0.5185, Validation Loss: 0.9201
+Epoch [5/15], Training Loss: 0.1750, Validation Loss: 0.9681
+Epoch [6/15], Training Loss: 0.0898, Validation Loss: 1.5325
+Epoch [7/15], Training Loss: 0.0142, Validation Loss: 1.0487
+Epoch [8/15], Training Loss: 0.0101, Validation Loss: 1.2847
+Epoch [9/15], Training Loss: 0.0005, Validation Loss: 2.6448
+Epoch [10/15], Training Loss: 0.0014, Validation Loss: 2.5488
+Epoch [11/15], Training Loss: 0.0010, Validation Loss: 2.4898
+Epoch [12/15], Training Loss: 0.0007, Validation Loss: 1.8826
+Epoch [13/15], Training Loss: 0.0032, Validation Loss: 2.5147
+Epoch [14/15], Training Loss: 0.0019, Validation Loss: 2.0673
+Epoch [15/15], Training Loss: 0.0021, Validation Loss: 2.5798
+Result:
+{'Macro Precision': 0.5352, 'Macro Recall': 0.5449, 'Macro F1-Score': 0.5396, 'Micro Precision': 0.5229, 'Micro Recall': 0.5229, 'Micro F1-Score': 0.5229, 'Accuracy': 0.5229}
+Epoch [1/15], Training Loss: 0.9737, Validation Loss: 1.1560
+Epoch [2/15], Training Loss: 1.0829, Validation Loss: 1.1117
+Epoch [3/15], Training Loss: 1.0302, Validation Loss: 1.3157
+Epoch [4/15], Training Loss: 1.2364, Validation Loss: 1.0076
+Epoch [5/15], Training Loss: 1.3583, Validation Loss: 1.1551
+Epoch [6/15], Training Loss: 0.9233, Validation Loss: 1.2084
+Epoch [7/15], Training Loss: 1.1721, Validation Loss: 0.8621
+Epoch [8/15], Training Loss: 1.1259, Validation Loss: 1.1584
+Epoch [9/15], Training Loss: 0.2905, Validation Loss: 1.0505
+Epoch [10/15], Training Loss: 0.4257, Validation Loss: 2.3390
+Epoch [11/15], Training Loss: 0.2124, Validation Loss: 2.1299
+Epoch [12/15], Training Loss: 0.0071, Validation Loss: 3.1754
+Epoch [13/15], Training Loss: 0.1767, Validation Loss: 2.1384
+Epoch [14/15], Training Loss: 0.0031, Validation Loss: 2.7361
+Epoch [15/15], Training Loss: 0.1155, Validation Loss: 2.2161
+Result:
+{'Macro Precision': 0.4953, 'Macro Recall': 0.5151, 'Macro F1-Score': 0.4971, 'Micro Precision': 0.5115, 'Micro Recall': 0.5115, 'Micro F1-Score': 0.5115, 'Accuracy': 0.5115}
+Epoch [1/15], Training Loss: 1.7201, Validation Loss: 1.2732
+Epoch [2/15], Training Loss: 0.9815, Validation Loss: 0.9678
+Epoch [3/15], Training Loss: 1.0768, Validation Loss: 1.1553
+Epoch [4/15], Training Loss: 1.4787, Validation Loss: 1.1930
+Epoch [5/15], Training Loss: 0.8595, Validation Loss: 0.8998
+Epoch [6/15], Training Loss: 0.3818, Validation Loss: 0.9960
+Epoch [7/15], Training Loss: 0.8155, Validation Loss: 1.2707
+Epoch [8/15], Training Loss: 0.5421, Validation Loss: 1.0741
+Epoch [9/15], Training Loss: 0.3963, Validation Loss: 1.6897
+Epoch [10/15], Training Loss: 0.0732, Validation Loss: 2.4886
+Epoch [11/15], Training Loss: 0.0809, Validation Loss: 2.9681
+End of training due to too many fluctuation
+Result:
+{'Macro Precision': 0.5205, 'Macro Recall': 0.5301, 'Macro F1-Score': 0.5245, 'Micro Precision': 0.5191, 'Micro Recall': 0.5191, 'Micro F1-Score': 0.5191, 'Accuracy': 0.5191}
+Epoch [1/15], Training Loss: 1.1807, Validation Loss: 1.3629
+Epoch [2/15], Training Loss: 1.6288, Validation Loss: 1.0636
+Epoch [3/15], Training Loss: 0.9131, Validation Loss: 0.9541
+Epoch [4/15], Training Loss: 0.8397, Validation Loss: 1.0277
+Epoch [5/15], Training Loss: 1.1447, Validation Loss: 1.1613
+Epoch [6/15], Training Loss: 0.9196, Validation Loss: 1.1084
+Epoch [7/15], Training Loss: 0.3821, Validation Loss: 1.2565
+Epoch [8/15], Training Loss: 0.3311, Validation Loss: 1.2483
+Epoch [9/15], Training Loss: 0.0270, Validation Loss: 1.6063
+Epoch [10/15], Training Loss: 0.0860, Validation Loss: 1.1786
+Epoch [11/15], Training Loss: 0.0619, Validation Loss: 3.7836
+Epoch [12/15], Training Loss: 0.3600, Validation Loss: 2.0012
+Epoch [13/15], Training Loss: 0.0090, Validation Loss: 2.8290
+Epoch [14/15], Training Loss: 0.0043, Validation Loss: 3.4035
+Epoch [15/15], Training Loss: 0.0011, Validation Loss: 2.7072
+Result:
+{'Macro Precision': 0.5154, 'Macro Recall': 0.5302, 'Macro F1-Score': 0.5201, 'Micro Precision': 0.5191, 'Micro Recall': 0.5191, 'Micro F1-Score': 0.5191, 'Accuracy': 0.5191}
+Epoch [1/15], Training Loss: 1.2259, Validation Loss: 1.0275
+Epoch [2/15], Training Loss: 1.3875, Validation Loss: 1.0125
+Epoch [3/15], Training Loss: 1.0542, Validation Loss: 1.0253
+Epoch [4/15], Training Loss: 0.3837, Validation Loss: 0.8661
+Epoch [5/15], Training Loss: 1.1800, Validation Loss: 1.0645
+Epoch [6/15], Training Loss: 0.5704, Validation Loss: 1.0866
+Epoch [7/15], Training Loss: 0.6001, Validation Loss: 1.1240
+End of training due to too many fluctuation
+Result:
+{'Macro Precision': 0.5281, 'Macro Recall': 0.5412, 'Macro F1-Score': 0.5312, 'Micro Precision': 0.5305, 'Micro Recall': 0.5305, 'Micro F1-Score': 0.5305, 'Accuracy': 0.5305}
+Fold 1:
+{'Macro Precision': 0.4903, 'Macro Recall': 0.5001, 'Macro F1-Score': 0.4775, 'Micro Precision': 0.4867, 'Micro Recall': 0.4867, 'Micro F1-Score': 0.4867, 'Accuracy': 0.4867}
+
+Fold 2:
+{'Macro Precision': 0.5311, 'Macro Recall': 0.5423, 'Macro F1-Score': 0.5357, 'Micro Precision': 0.5209, 'Micro Recall': 0.5209, 'Micro F1-Score': 0.5209, 'Accuracy': 0.5209}
+
+Fold 3:
+{'Macro Precision': 0.5915, 'Macro Recall': 0.6025, 'Macro F1-Score': 0.5959, 'Micro Precision': 0.597, 'Micro Recall': 0.597, 'Micro F1-Score': 0.597, 'Accuracy': 0.597}   
+
+Fold 4:
+{'Macro Precision': 0.5114, 'Macro Recall': 0.5163, 'Macro F1-Score': 0.5131, 'Micro Precision': 0.4924, 'Micro Recall': 0.4924, 'Micro F1-Score': 0.4924, 'Accuracy': 0.4924}
+
+Fold 5:
+{'Macro Precision': 0.5793, 'Macro Recall': 0.5858, 'Macro F1-Score': 0.5818, 'Micro Precision': 0.5954, 'Micro Recall': 0.5954, 'Micro F1-Score': 0.5954, 'Accuracy': 0.5954}
+
+Fold 6:
+{'Macro Precision': 0.5352, 'Macro Recall': 0.5449, 'Macro F1-Score': 0.5396, 'Micro Precision': 0.5229, 'Micro Recall': 0.5229, 'Micro F1-Score': 0.5229, 'Accuracy': 0.5229}
+
+Fold 7:
+{'Macro Precision': 0.4953, 'Macro Recall': 0.5151, 'Macro F1-Score': 0.4971, 'Micro Precision': 0.5115, 'Micro Recall': 0.5115, 'Micro F1-Score': 0.5115, 'Accuracy': 0.5115}
+
+Fold 8:
+{'Macro Precision': 0.5205, 'Macro Recall': 0.5301, 'Macro F1-Score': 0.5245, 'Micro Precision': 0.5191, 'Micro Recall': 0.5191, 'Micro F1-Score': 0.5191, 'Accuracy': 0.5191}
+
+Fold 9:
+{'Macro Precision': 0.5154, 'Macro Recall': 0.5302, 'Macro F1-Score': 0.5201, 'Micro Precision': 0.5191, 'Micro Recall': 0.5191, 'Micro F1-Score': 0.5191, 'Accuracy': 0.5191}
+
+Fold 10:
+{'Macro Precision': 0.5281, 'Macro Recall': 0.5412, 'Macro F1-Score': 0.5312, 'Micro Precision': 0.5305, 'Micro Recall': 0.5305, 'Micro F1-Score': 0.5305, 'Accuracy': 0.5305}
+
+Averages:
+{'Macro Precision': 0.5298, 'Macro Recall': 0.5408, 'Macro F1-Score': 0.5317, 'Micro Precision': 0.5296, 'Micro Recall': 0.5296, 'Micro F1-Score': 0.5296, 'Accuracy': 0.5295}
+-----------------------------
+
 """

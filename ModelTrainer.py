@@ -66,21 +66,21 @@ def getDataset(path = "Cleaned Dataset"):
     return trainingData, validationData
 
 #Define function to train the model
-def train(path, epochs = 15):
+def train(path,  type=0, epochs = 15, treshold = 2):
 
     #Create device to run model
     #This is to allow the the program to run on a GPU
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     #Writing parameters for early stoping procedure
-    fluctuationTreshold = 2 #Patience level of 2
+    fluctuationTreshold = treshold #Patience level set to two by default
     countFluctuation = 0 #Count start at 0
     PreviousLoss = 0 #Create variable to store previous loss
 
-    #Instantiate Model Depending on path fed
-    if(path == "Varient1"):
+    #Instantiate Model Depending on type fed
+    if(type == 1):
         model = V1().to(device)
-    elif(path == "Varient2"):
+    elif(type == 2):
         model = V2().to(device)
     else:
         model = Main().to(device) #Allows toss up path
@@ -159,7 +159,7 @@ def train(path, epochs = 15):
 
         #Then check if count equal or surpasses treshold
         if(countFluctuation >= fluctuationTreshold):
-            print(f'Exited program due to too many fluctuation')
+            print(f'End of training due to too many fluctuation')
             torch.save(model.state_dict(), f'SavedModels/{path}.pth')
             return #return and end
         
@@ -168,6 +168,30 @@ def train(path, epochs = 15):
 
 
 #Call the train functions
-train("MainModel")
-train("Varient1")
-train("Varient2")
+#train("MainModel")
+#train("Varient1")
+#train("Varient2")
+
+#Training a model on our variant 1 strucutre over 15 epoches and a tolerance of 3
+train("V1Model",type=1,epochs=15,treshold=3)
+
+"""
+Post mitigation unbiased model
+--------Log Output----------- Epochs 15, treshold 3, Variant 1
+Epoch [1/15], Training Loss: 1.1876, Validation Loss: 1.1896
+Epoch [2/15], Training Loss: 0.9700, Validation Loss: 0.9799
+Epoch [3/15], Training Loss: 0.7885, Validation Loss: 0.8727
+Epoch [4/15], Training Loss: 1.0400, Validation Loss: 1.0198
+Epoch [5/15], Training Loss: 0.7291, Validation Loss: 1.0770
+Epoch [6/15], Training Loss: 0.4977, Validation Loss: 0.9315
+Epoch [7/15], Training Loss: 0.4627, Validation Loss: 1.2172
+Epoch [8/15], Training Loss: 0.3522, Validation Loss: 2.4720
+Epoch [9/15], Training Loss: 0.3943, Validation Loss: 1.5875
+Epoch [10/15], Training Loss: 0.3870, Validation Loss: 2.0028
+Epoch [11/15], Training Loss: 0.0785, Validation Loss: 1.9971
+Epoch [12/15], Training Loss: 0.1436, Validation Loss: 2.9134
+Epoch [13/15], Training Loss: 0.0456, Validation Loss: 3.3868
+Epoch [14/15], Training Loss: 0.1650, Validation Loss: 3.2325
+Epoch [15/15], Training Loss: 0.0019, Validation Loss: 4.5510
+-----------------------------
+"""
