@@ -240,7 +240,7 @@ Indices,Path,Gender,Race
 1073,Cleaned Dataset\Focused\image_568.jpg,Male,White
 1162,Cleaned Dataset\Happy\10157.jpg,Female,White
 1972,Cleaned Dataset\Neutral\11450.jpg,Female,White
-2256,Cleaned Dataset\Neutral\13083.jpg,Female,Native
+2256,Cleaned Dataset\Neutral\13083.jpg,Female,Asian
 927,Cleaned Dataset\Focused\image_427.jpg,Other,Black
 1240,Cleaned Dataset\Happy\105.jpg,Female,White
 2010,Cleaned Dataset\Neutral\11638.jpg,Male,Black
@@ -253,7 +253,7 @@ Indices,Path,Gender,Race
 340,Cleaned Dataset\Angry\12635.jpg,Female,White
 300,Cleaned Dataset\Angry\1233.jpg,Male,White
 879,Cleaned Dataset\Focused\image_374.jpg,Female,Black
-320,Cleaned Dataset\Angry\12483.jpg,Male,Native
+320,Cleaned Dataset\Angry\12483.jpg,Male,Asian
 2120,Cleaned Dataset\Neutral\12308.jpg,Female,White
 772,Cleaned Dataset\Focused\image_261.jpg,Male,Black
 1349,Cleaned Dataset\Happy\11033.jpg,Female,White
@@ -270,7 +270,7 @@ Indices,Path,Gender,Race
 1600,Cleaned Dataset\Happy\12164.jpg,Male,White
 446,Cleaned Dataset\Angry\13568.jpg,Male,Black
 427,Cleaned Dataset\Angry\13415.jpg,Other,White
-1301,Cleaned Dataset\Happy\10772.jpg,Male,Native
+1301,Cleaned Dataset\Happy\10772.jpg,Male,Asian
 480,Cleaned Dataset\Angry\13892.jpg,Male,White
 863,Cleaned Dataset\Focused\image_355.jpg,Female,White
 288,Cleaned Dataset\Angry\12262.jpg,Male,White
@@ -278,8 +278,8 @@ Indices,Path,Gender,Race
 1447,Cleaned Dataset\Happy\11493.jpg,Male,Asian
 1098,Cleaned Dataset\Focused\image_76.jpg,Male,White
 1710,Cleaned Dataset\Happy\1269.jpg,Male,White
-945,Cleaned Dataset\Focused\image_444.jpg,Female,Native
-2197,Cleaned Dataset\Neutral\1277.jpg,Male,Native
+945,Cleaned Dataset\Focused\image_444.jpg,Female,Asian
+2197,Cleaned Dataset\Neutral\1277.jpg,Male,Asian
 1995,Cleaned Dataset\Neutral\11542.jpg,Female,White
 1454,Cleaned Dataset\Happy\11515.jpg,Male,Asian
 804,Cleaned Dataset\Focused\image_296.jpg,Male,White
@@ -313,7 +313,7 @@ Indices,Path,Gender,Race
 2109,Cleaned Dataset\Neutral\12242.jpg,Male,White
 1381,Cleaned Dataset\Happy\1117.jpg,Female,White
 1045,Cleaned Dataset\Focused\image_542.jpg,Female,White
-624,Cleaned Dataset\Focused\image_116.jpg,Female,Native
+624,Cleaned Dataset\Focused\image_116.jpg,Female,Asian
 403,Cleaned Dataset\Angry\13190.jpg,Other,White
 1545,Cleaned Dataset\Happy\11920.jpg,Male,White
 668,Cleaned Dataset\Focused\image_157.jpg,Male,Asian
@@ -335,7 +335,7 @@ Indices,Path,Gender,Race
 1753,Cleaned Dataset\Neutral\10084.jpg,Male,Black
 1320,Cleaned Dataset\Happy\10872.jpg,Male,White
 966,Cleaned Dataset\Focused\image_468.jpg,Male,White
-1768,Cleaned Dataset\Neutral\10175.jpg,Other,Native
+1768,Cleaned Dataset\Neutral\10175.jpg,Other,Asian
 2020,Cleaned Dataset\Neutral\11711.jpg,Other,Asian
 2293,Cleaned Dataset\Neutral\13321.jpg,Other,White
 1496,Cleaned Dataset\Happy\11720.jpg,Male,White

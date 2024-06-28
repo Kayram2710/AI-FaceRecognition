@@ -249,12 +249,9 @@ Race bias for Black:
 {'Macro Precision': 0.5816, 'Macro Recall': 0.574, 'Macro F1-Score': 0.5643, 'Accuracy': 0.5806, 'Number of Images': 62}
 
 Race bias for Asian:
-{'Macro Precision': 0.6027, 'Macro Recall': 0.5833, 'Macro F1-Score': 0.5583, 'Accuracy': 0.5, 'Number of Images': 30}
-
-Race bias for Native:
-{'Macro Precision': 0.375, 'Macro Recall': 0.3333, 'Macro F1-Score': 0.35, 'Accuracy': 0.4286, 'Number of Images': 7}
+{'Macro Precision': 0.5558, 'Macro Recall': 0.5406, 'Macro F1-Score': 0.5315, 'Accuracy': 0.4865, 'Number of Images': 37}
 
 Averages/Totals for Race bias:
-{'Macro Precision': 0.5358, 'Macro Recall': 0.5136, 'Macro F1-Score': 0.5111, 'Accuracy': 0.5162, 'Total Images': 351}
+{'Macro Precision': 0.5738, 'Macro Recall': 0.5595, 'Macro F1-Score': 0.5559, 'Accuracy': 0.5409, 'Total Images': 351}
 -----------------------------
 """
